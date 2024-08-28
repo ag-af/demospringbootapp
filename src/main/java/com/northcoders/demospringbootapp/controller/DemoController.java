@@ -51,6 +51,8 @@ public class DemoController {
 
     @GetMapping("/suntimes")
     public String getSunriseSunset(@RequestParam float lat, @RequestParam float lng){
+        if (lat < -180 || lat > 180 || lng < -180 || lng > 180) return "Invalid latitude/longitude values!";
+
         WebClient webClient = WebClient.create("https://api.sunrisesunset.io");
 
         SunTimeResponse response = webClient.get()
