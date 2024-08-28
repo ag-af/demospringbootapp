@@ -42,6 +42,8 @@ public class DemoController {
                 .bodyToMono(GeocodeResponse.class)
                 .block();
 
+        if (response == null || response.results() == null) return "City not found!";
+
         City cityFromWeb = response.results().getFirst();
 
         return  "city:      " + cityFromWeb.name() + "\n" +
