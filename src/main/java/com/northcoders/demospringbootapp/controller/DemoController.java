@@ -1,8 +1,6 @@
 package com.northcoders.demospringbootapp.controller;
 
-import com.northcoders.demospringbootapp.model.City;
-import com.northcoders.demospringbootapp.model.GeocodeResponse;
-import com.northcoders.demospringbootapp.model.Person;
+import com.northcoders.demospringbootapp.model.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,4 +49,19 @@ public class DemoController {
                 "longitude: " + cityFromWeb.longitude() + "\n";
     }
 
+    @GetMapping("/suntimes")
+    public String getSunriseSunset(@RequestParam float lat, @RequestParam float lng){
+        WebClient webClient = WebClient.create("https://api.sunrisesunset.io");
+
+        SunTimeResponse response = webClient.get()
+                .uri("json?lat=" + lat + "&lng=" +lng)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(SunTimeResponse.class)
+                .block();
+
+        if (response == null || response.results() == null) return "Sunrise and sunset not found!";
+
+        return "Sunrise: " + response.results().sunrise() + "\n" + "Sunset: " + response.results().sunset();
+    }
 }
