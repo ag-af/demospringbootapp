@@ -1,9 +1,15 @@
 package com.northcoders.demospringbootapp.controller;
 
+import com.northcoders.demospringbootapp.model.City;
+import com.northcoders.demospringbootapp.model.GeocodeResponse;
 import com.northcoders.demospringbootapp.model.Person;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +29,24 @@ public class DemoController {
         people.add(new Person("Simon", 18, "simon@northcoders.com", "Liverpool", "Pasta"));
         people.add(new Person("Alex", 17, "alex@northcoders.com", "London", "Burger"));
         return people;
+    }
+
+    @GetMapping("/geocode")
+    public String getLatLong(@RequestParam String city){
+        WebClient webClient = WebClient.create("https://geocoding-api.open-meteo.com");
+
+        GeocodeResponse response = webClient.get()
+                .uri("/v1/search?name=" + city + "&count=1&language=en&format=json")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(GeocodeResponse.class)
+                .block();
+
+        City cityFromWeb = response.results().getFirst();
+
+        return  "city:      " + cityFromWeb.name() + "\n" +
+                "latitude:  " + cityFromWeb.latitude() + "\n" +
+                "longitude: " + cityFromWeb.longitude() + "\n";
     }
 
 }
