@@ -1,6 +1,6 @@
 package com.northcoders.demospringbootapp.controller;
 
-import com.northcoders.demospringbootapp.model.People;
+import com.northcoders.demospringbootapp.model.Person;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,11 +18,11 @@ public class DemoController {
     }
 
     @GetMapping("/people")
-    public List<People> getPeople() {
-        List<People> person = new ArrayList<>();
-        person.add(new People("Simon", 18, "simon@northcoders.com", "Liverpool", "Pasta"));
-        person.add(new People("Alex", 17, "alex@northcoders.com", "London", "Burger"));
-        return person;
+    public List<Person> getPeople() {
+        List<Person> people = new ArrayList<>();
+        people.add(new Person("Simon", 18, "simon@northcoders.com", "Liverpool", "Pasta"));
+        people.add(new Person("Alex", 17, "alex@northcoders.com", "London", "Burger"));
+        return people;
     }
 
 }
